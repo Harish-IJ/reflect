@@ -1,0 +1,16 @@
+# Dev-only image: runs the Vite dev server with HMR. Production will use a
+# separate multi-stage build that outputs static files behind nginx.
+FROM node:22-alpine
+WORKDIR /app
+
+# Dependencies first, in their own layer: reinstalls only when the manifest
+# or lockfile change, not on every source edit.
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+COPY . .
+EXPOSE 3000
+
+# --host 0.0.0.0: Vite binds to localhost by default, which inside a
+# container is unreachable from outside; bind all interfaces instead.
+CMD ["yarn", "dev", "--host", "0.0.0.0"]

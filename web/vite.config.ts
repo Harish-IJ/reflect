@@ -10,4 +10,12 @@ export default defineConfig({
     viteReact(),
     tailwindcss(),
   ],
+  server: {
+    watch: {
+      // File-change events don't cross the Windows -> WSL2 bind-mount
+      // boundary, so poll when running inside Docker.
+      usePolling: process.env.DOCKER_DEV === 'true',
+      interval: 300,
+    },
+  },
 })

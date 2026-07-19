@@ -1,0 +1,49 @@
+name: reflect
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: reflect
+      POSTGRES_PASSWORD: reflect
+      POSTGRES_DB: reflect
+    # Published to the host so psql/GUI tools on Windows can reach the dev DB.
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reflect -d reflect"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build: ./reflect-server
+    environment:
+      # Host "postgres" is the service name, resolved by compose's network DNS.
+      DATABASE_URL: postgres://reflect:reflect@postgres:5432/reflect
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      DOCKER_DEV: "true"
+    volumes:
+      # Bind-mount sources for hot reload...
+      - ./web:/app
+      # ...but shadow node_modules with a container-local volume: the host
+      # copy holds Windows-native binaries that would break inside Linux.
+      - /app/node_modules
+
+volumes:
+  pgdata:

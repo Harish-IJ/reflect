@@ -24,6 +24,10 @@ services:
       # Host "postgres" is the service name, resolved by compose's network DNS.
       DATABASE_URL: postgres://reflect:reflect@postgres:5432/reflect
       PORT: "8080"
+      # Dev password, seeded into the single user on first boot. Change for real use.
+      ADMIN_PASSWORD: reflectdev
+      # HTTP dev over localhost: cookie must not be Secure or the browser drops it.
+      COOKIE_SECURE: "false"
     ports:
       - "8080:8080"
     depends_on:

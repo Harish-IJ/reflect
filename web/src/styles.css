@@ -1,1 +1,49 @@
 @import 'tailwindcss';
+
+@theme {
+  /* Reflect — a calm tidal palette. Ink on a cool bone-green canvas;
+     semantic states read as natural tide-lines, never alarms. */
+  --color-ink: #16302f;
+  --color-ink-soft: #52635f;
+  --color-canvas: #ecefe8;
+  --color-surface: #f7f9f4;
+  --color-line: rgba(22, 48, 47, 0.1);
+  --color-line-strong: rgba(22, 48, 47, 0.18);
+
+  --color-achieved: #3f8f7d; /* calm teal-green — done */
+  --color-achieved-soft: #d3e6df;
+  --color-recoverable: #c99a3f; /* soft ochre — catch-up available */
+  --color-recoverable-soft: #ecdcb6;
+  --color-hardened: #b25c4d; /* muted clay — behind, not failed */
+  --color-hardened-soft: #eccfc7;
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Numbers should never jitter as they change. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
